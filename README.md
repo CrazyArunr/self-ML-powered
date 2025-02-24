@@ -48,7 +48,7 @@ The command "ng serve --open" is used in Angular development to start a local de
 ```
 
 Upon successfull build of the Angular application, you should see the following page on http://localhost:4200/
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/1fd2a712-a8c9-47b8-8717-050ce99e3cbb)
+
 
 ## Download docker images and spin up docker containers required for Healenium
 
@@ -56,7 +56,6 @@ Navigate to infra folder in the JavaHealeniumPOC in the terminal and run the fol
 
 infra folder is found here where docker compose file is located
 
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/e5ad09d3-e96a-4f91-8ce5-9cb3ada9de49)
 
 docker command to run 
 ```shell
@@ -70,11 +69,7 @@ The Docker command "docker-compose up -d" is used to start containers defined in
 
 3. **-d:** The "-d" flag stands for "detached" mode. When you use this flag, Docker Compose starts the containers in the background, and the command prompt is returned to you immediately. This means you can continue using the terminal for other tasks without being attached to the container's logs.
 ```
-To verify that you have all the expected containers running successfuly you can run "docker ps" command in the terminal and see the following output
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/68606a41-5e5f-4e3b-a4b4-d939fba45ef1)
 
-Alternatily open docker desktop and navigate to containers where you should see the following list of running containers under infra
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/82c0d1d3-966d-4e8e-abde-fd082ccf6a73)
 
 # How to Use the Project
 The POC demonstrates how Healenium can handle changes in web locators to prevent test failures.
@@ -120,7 +115,7 @@ Angular project
 ```
 
 To verify that the baseline snapshot of the elements that Selenium interacts with has been saved correctly, you can navigate to this url http://localhost:7878/healenium/selectors/ where you should see the following:
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/655fbf76-2496-4c55-b8a1-8c22512ec340)
+
 
 
 
@@ -143,60 +138,8 @@ After the change
     </a>
 ```
 
-Element under test
-![image](https://user-images.githubusercontent.com/35194143/232344213-9ce1400a-9831-489c-a305-24fcf28f765c.png)
-![image](https://user-images.githubusercontent.com/35194143/232346966-d58c01fc-ac08-42be-934e-0a1c5397ed8c.png)  
 
-Test case  
-![image](https://user-images.githubusercontent.com/35194143/233724460-99fedcc9-0f56-4a95-a93e-c7f9add1064c.png)    
-![image](https://user-images.githubusercontent.com/35194143/233773830-b9c1ab70-b8cc-4aa1-becd-1e56028aad6e.png)  
 
-## Scenario 1 
-### Matching locator(#angular-material in both Angular and Selenium). Test passes.
-
-![image](https://user-images.githubusercontent.com/35194143/232344657-25a1ea69-b5e4-473e-b17b-65767be4fca9.png)    
-Angular  
-![image](https://user-images.githubusercontent.com/35194143/232348107-a8fbc511-9e97-42f9-b75f-341498dee22a.png)    
-Selenium   
-![image](https://user-images.githubusercontent.com/35194143/232348144-aa9ecc7f-3f5f-4081-8018-e1102da6953b.png)  
-Docker  
-![image](https://user-images.githubusercontent.com/35194143/233727440-ba546c39-1daf-428f-b8cf-803c576a5b52.png)  
-
-## Scenario 2
-### Non matching locator(#react-material in Angular vs #angular-material in Selenium) AND self healing capability is switched OFF. Test fails with no such element exception.
-
-Id is changed in the Angular project from #angular-material to #react-material
-![image](https://user-images.githubusercontent.com/35194143/232347461-86fe0044-51ea-424d-8f84-bfd24af25793.png)  
-![image](https://user-images.githubusercontent.com/35194143/232347359-28ec0ceb-ca8c-41b5-b36f-61280a58d430.png)  
-![image](https://user-images.githubusercontent.com/35194143/232347447-e66165c3-1cde-4b44-9466-6ddc1917f765.png)  
-
-## Scenario 3 
-### Non matching locator(#react-material in Angular vs #angular-material in Selenium) AND self healing capability is switched ON. Test passes.
-
-![image](https://user-images.githubusercontent.com/35194143/232345734-14672335-f6a0-4b5f-b808-c5fca9e2a825.png)  
-Screenshot of the healed web element  
-![image](https://user-images.githubusercontent.com/35194143/232347195-f5b458d7-eacc-45f2-83d8-95fc84a04fa4.png)  
-Screenshots of all the healed elements can be found in this folder ..\SeleniumWithSelfHealingCodeGen\infra\screenshots
-
-Verify that the element has been healed successfully by navigating to http://localhost:7878/healenium/report/ where you will see the following report along with a screenshot of the healed web element
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/03148051-ce83-4276-b6c7-3bbaf77297a8)
-
-With the standard Selenium implementation my test will fail in this scenario. With Healenium wrapper on top of WebDriver, it catches NoSuchElement exception, triggers the LSC algorithm, passes the current page state, gets previous successful locator path, compares them, and generates the list of healed locators. From this list, Healenium selects the locator with the highest score and proceeds to perform an action using this locator. Upon test completion, Healenium compiles a comprehensive report. This report contains detailed information about the healed locator, includes a screenshot illustrating the successful healing process, and offers a feedback button for users to provide insights on the healing success. 
-
-More information on how to wrap WebDriver with Healenium can be found in WebDriverFactory class
-![image](https://github.com/arthurandreev/MLPoweredSeleniumJavaPOC/assets/35194143/740f7119-258e-4410-827c-f789945cd428)
-
-More information on Healenium can be found here - https://healenium.io/docs/how_healenium_works <br>
-More information on the LSC algorithm can be found here - https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/ 
-
-Last thing to note is that Healenium needs a healenium.properties file in your solution where you configure its settings. Below is the healenium.properties file I have in my solution with explanation of each line.  
-![image](https://user-images.githubusercontent.com/35194143/232717543-50ff96b5-bc21-43b6-995d-f5e124f1f4d1.png)
-- recovery-tries=1: This line indicates the number of attempts Healenium should make to locate a missing element using its self-healing mechanism.  
-- score-cap=.6: This sets the minimum similarity score (between 0 and 1) required for an alternative locator to be considered a match. The value of 0.6 means that Healenium will only consider locators with a similarity score of 60% or higher.  
-- heal-enabled=true: This line enables or disables Healenium's self-healing feature. When set to true, Healenium's self-healing capabilities will be active.  
-- serverHost=localhost: This line specifies the server host for the Healenium backend service. In this case, it is set to localhost, meaning the service will run on the same machine as the tests.  
-- serverPort=7878: This line defines the port on which the Healenium backend service will listen. Here, it is set to port 7878.  
-- imitatePort=8000: This line sets the port used for communication between the Healenium backend service and the client (Selenium tests). In this case, it is set to port 8000.
 
 # Summary
 Healenium offers a valuable solution for Selenium automation projects, significantly reducing maintenance work and addressing the common issue of failing regression tests due to minor web locator changes. It's a powerful tool for making your test automation more robust and efficient, allowing you to focus on creating tests for new features rather than constantly fixing failing regression tests. Explore Healenium further to harness its full capabilities and enhance your test automation processes.
