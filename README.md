@@ -82,61 +82,11 @@ The POC demonstrates how Healenium can handle changes in web locators to prevent
 
 4. You can verify the self-healing by visiting [http://localhost:7878/healenium/report/](http://localhost:7878/healenium/report/), where you'll find a report and a screenshot of the healed web element.
 
-# DEMO 
-
-## Use case - change in an id used to locate a button breaks a test
-The id that my navigateToAngularMaterialPageTest is using to click on the button that takes me to a new tab has been changed and this will normally make my test fail with no element found exception. The web element itself hasn't changed but because the id has been changed it will make the tests that rely on it to fail resulting in a failed regression test. 
-
-To simulate this scenario, firstly you need to run the test at least once when it passes to enable Healenium to save a snapshot of the elements on the page to a Postgres DB. In this scenario the web locators in the Selenium project and the angular application must match. This baseline snapshot image will be used in subsequent test runs to heal elements that face element not found exceptions. 
-
-Selenium project
-```shell
-public class HomePage {
-
-    private SelfHealingDriver driver;
-
-    @FindBy(id = "angular-material")
-    public WebElement angularMaterial;
-
-    public HomePage(SelfHealingDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-    }
-}
-```
-
-Angular project
-```shell
- <a class="card" target="_blank" rel="noopener" href="https://material.angular.io" id="angular-material">
-      <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px" width="21.813" height="23.453" viewBox="0 0 179.2 192.7"><path fill="#ffa726" d="M89.4 0 0 32l13.5 118.4 75.9 42.3 76-42.3L179.2 32 89.4 0z"/><path fill="#fb8c00" d="M89.4 0v192.7l76-42.3L179.2 32 89.4 0z"/><path fill="#ffe0b2" d="m102.9 146.3-63.3-30.5 36.3-22.4 63.7 30.6-36.7 22.3z"/><path fill="#fff3e0" d="M102.9 122.8 39.6 92.2l36.3-22.3 63.7 30.6-36.7 22.3z"/><path fill="#fff" d="M102.9 99.3 39.6 68.7l36.3-22.4 63.7 30.6-36.7 22.4z"/></svg>
-      <span>Angular Material</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-```
-
-To verify that the baseline snapshot of the elements that Selenium interacts with has been saved correctly, you can navigate to this url http://localhost:7878/healenium/selectors/ where you should see the following:
 
 
 
 
-Secondly, you need to navigate to app.component.html class in my-angular-app, change the id for the element below from angular-material to react material. Save this code change. Angular normally does a live reload and your id change is reflected immediatly in [localhost](http://localhost:4200/). However it is a good idea to inspect the element in dev tools to make sure the change has been reflected in the localhost as expected before continuing. 
 
-Before the change
-```shell
- <a class="card" target="_blank" rel="noopener" href="https://material.angular.io" id="angular-material">
-      <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px" width="21.813" height="23.453" viewBox="0 0 179.2 192.7"><path fill="#ffa726" d="M89.4 0 0 32l13.5 118.4 75.9 42.3 76-42.3L179.2 32 89.4 0z"/><path fill="#fb8c00" d="M89.4 0v192.7l76-42.3L179.2 32 89.4 0z"/><path fill="#ffe0b2" d="m102.9 146.3-63.3-30.5 36.3-22.4 63.7 30.6-36.7 22.3z"/><path fill="#fff3e0" d="M102.9 122.8 39.6 92.2l36.3-22.3 63.7 30.6-36.7 22.3z"/><path fill="#fff" d="M102.9 99.3 39.6 68.7l36.3-22.4 63.7 30.6-36.7 22.4z"/></svg>
-      <span>Angular Material</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-```
-After the change
-```shell
- <a class="card" target="_blank" rel="noopener" href="https://material.angular.io" id="react-material">
-      <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px" width="21.813" height="23.453" viewBox="0 0 179.2 192.7"><path fill="#ffa726" d="M89.4 0 0 32l13.5 118.4 75.9 42.3 76-42.3L179.2 32 89.4 0z"/><path fill="#fb8c00" d="M89.4 0v192.7l76-42.3L179.2 32 89.4 0z"/><path fill="#ffe0b2" d="m102.9 146.3-63.3-30.5 36.3-22.4 63.7 30.6-36.7 22.3z"/><path fill="#fff3e0" d="M102.9 122.8 39.6 92.2l36.3-22.3 63.7 30.6-36.7 22.3z"/><path fill="#fff" d="M102.9 99.3 39.6 68.7l36.3-22.4 63.7 30.6-36.7 22.4z"/></svg>
-      <span>Angular Material</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-```
 
 
 
